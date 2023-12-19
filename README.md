@@ -1,8 +1,8 @@
 # Features 
-User Authentication: Can be logged in using username and password
-Polls: Can vote to their favourite dish
-Results: Can view the their vote and view points based on others casting
-Edit the Choice: Users can able edit their own choice
+User Authentication: Can be logged in using username and password. 
+Polls: Can vote to their favourite dish. 
+Results: Can view the their vote and view points based on others casting. 
+Edit the Choice: Users can able edit their own choice.
 # Getting Started
 Follow the instruction to get the App running on you're local system.
 
