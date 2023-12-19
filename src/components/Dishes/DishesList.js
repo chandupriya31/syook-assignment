@@ -30,8 +30,8 @@ function DishRanking() {
   }, [loggedInUserId]);
 
   const handleSelectDish = (dishId) => {
-    setSelectedDishId(dishId);
-  };
+    setSelectedDishId(dishId)
+  }
 
   const isSelected = (dishId) => {
     // vote.map(ele =>{
