@@ -9,47 +9,55 @@ function DishList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userDispatch, userState } = useContext(UserContext);
-  const [votes, setVotes] = useState([]);
-
-  useEffect(() => {
-    if (localStorage.getItem("user")) {
-      dispatch(startGetDishes())
-    }
-  }, [dispatch])
+  const [votes, setVotes] = useState([])
 
   const loggedInUserId = userState.user.id
 
   useEffect(() => {
-    if (Array.isArray(userState?.myVotes)) {
-      const vote = userState.myVotes.map((ele) => ele?.dishId)
-      setVotes(vote)
+    if (JSON.parse(localStorage.getItem("user"))) {
+      dispatch(startGetDishes())
+      const storedVotes = JSON.parse(localStorage.getItem(userState.user.name)) || []
+      setVotes(storedVotes)
     }
-  }, [loggedInUserId, userState.myVotes])
+  }, [dispatch, userState.user.name])
+
+  useEffect(() => {
+    localStorage.setItem(userState.user.name, JSON.stringify(votes))
+  }, [votes, userState.user.name])
 
   const handleVotes = (dishId, points) => {
     setVotes((prev) => {
-      const existing = prev.findIndex((vote) => vote.dishId === dishId);
-      if (existing !== -1) {
-        const updated = [...prev]
-        updated[existing].points = points
-        const pts = updated[existing].points
-        updated.forEach((vote, i) => {
-          if (i !== existing && vote.points === pts) {
-            updated[i].points = 0
-          }
-        })
-        return updated
+      let updatedVotes;
+  
+      const existingIndex = prev.findIndex((vote) => vote.dishId === dishId);
+      const sameRank = prev.findIndex((vote) => vote.points === points);
+  
+      if (existingIndex !== -1) {
+        updatedVotes = [...prev];
+        updatedVotes[existingIndex].points = points;
+  
+        if (sameRank !== -1 && sameRank !== existingIndex) {
+          updatedVotes[sameRank].points = 0;
+        }
+  
+        if (points === 0) {
+          updatedVotes.splice(existingIndex, 1)
+        }
       } else {
-        const sameRank = prev.findIndex((vote) => vote.points === points)
         if (sameRank !== -1) {
-          const updated = [...prev]
-          updated[sameRank].points = 0
-          updated.push({ dishId, points })
-          return updated
+          prev[sameRank].points = 0;
+          prev.push({ dishId, points });
+          updatedVotes = prev;
         } else {
-          return [...prev, { dishId, points }]
+          const ranksCount = prev.filter((vote) => vote.points !== 0).length
+          if (ranksCount < 3) {
+            updatedVotes = [...prev, { dishId, points }]
+          }
         }
       }
+
+      const filteredVotes = updatedVotes.filter((vote) => vote.points !== 0)
+      return filteredVotes.slice(0, 3)
     });
   };
 

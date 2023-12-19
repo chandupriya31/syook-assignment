@@ -12,7 +12,8 @@ export const UserContext = createContext()
 function App() {
 
   useEffect(()=>{
-    JSON.parse(localStorage.getItem('user'))
+    const userData = JSON.parse(localStorage.getItem('user'))
+    userDispatch({type:'GET_USER',payload:userData})
     JSON.parse(localStorage.getItem(userState?.user.name))
   },[])
 

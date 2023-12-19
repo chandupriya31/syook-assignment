@@ -15,7 +15,7 @@ export function Navbar(){
     return (
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <Link class="navbar-brand" to="">DISH POLL</Link>
-        {Object.values(userState.user).length>0 && (
+        {localStorage.getItem('user') && (
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav ms-auto">
                     <li className="nav-item">

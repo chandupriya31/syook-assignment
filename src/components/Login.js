@@ -25,11 +25,11 @@ function Login() {
     return errors
   }
 
-  // useEffect(()=>{
-  //   (async()=>{
-  //     localStorage.getItem('')
-  //   })()
-  // },[])
+  useEffect(()=>{
+    (async()=>{
+      JSON.parse(localStorage.getItem('user'))
+    })()
+  },[])
 
   const handleSubmit = (e)=>{
     e.preventDefault()
