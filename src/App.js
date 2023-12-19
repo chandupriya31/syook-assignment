@@ -17,7 +17,7 @@ function App() {
   },[])
 
   const [userState,userDispatch] = useReducer(userReducer,{user:{},myVotes:[]})
-  console.log(userState)
+  // console.log(userState)
   return (
     <div>
       <UserContext.Provider value={{userState,userDispatch}}>
