@@ -24,15 +24,21 @@ function DishRanking() {
   const [selectedDishId, setSelectedDishId] = useState(vote)
 
   useEffect(() => {
-    setSelectedDishId(vote)
-  }, [loggedInUserId, vote])
-
-  const handleSelectDish = (dishId) => {
-    setSelectedDishId(dishId)
-  }
+    if (Array.isArray(userState?.myVotes)) {
+      const vote = userState.myVotes.map(ele => ele?.dishId);
+      setSelectedDishId(vote)
+    }
+  }, [loggedInUserId, userState.myVotes])
 
   const isSelected = (dishId) => {
-    return selectedDishId.includes(dishId)
+    const data = JSON.parse(localStorage.getItem(userState?.user.name)) || []
+    for(let i = 0;i<data.length;i++){
+      console.log(data[i],dishId)
+      if(data[i].dishId === dishId){
+        return true
+      }
+    }
+    return false
   }
 
   return (
@@ -51,10 +57,9 @@ function DishRanking() {
             sortedDishes.map((ele) => (
               <tr
                 key={ele.id}
-                className={isSelected(ele.id) ? "user-selection" : ""}
-                onClick={() => handleSelectDish(ele.id)}
+                className={isSelected(ele.id) ? 'user-selection':''}
               >
-                <td>{ele.id}</td>
+                <td>{ele.id}</td> 
                 <td>{ele.dishName}</td>
                 <td>{getPointsForDish(ele.id)}</td>
               </tr>

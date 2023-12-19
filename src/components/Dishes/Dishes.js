@@ -11,7 +11,7 @@ function DishList() {
   // const dishData = useSelector((state)=>{
   //   return state?.dish?.dishes
   // })
-  const { userDispatch } = useContext(UserContext);
+  const { userDispatch,userState } = useContext(UserContext);
   const [votes, setVotes] = useState([]);
 
   useEffect(() => {
@@ -64,8 +64,38 @@ function DishList() {
     const formData = {
       votes
     }
+    // const data = JSON.parse(localStorage.getItem('votes'))
+    if(!localStorage.getItem(userState.user.name)===null){
+      const prevVotes = JSON.parse(localStorage.getItem(userState.user.name))
+      const pts = JSON.parse(localStorage.getItem('dishPoints'))
+      let arr = []
+      for(let i=0;i<=prevVotes.length-1;i++){
+        for(let j = 0;j<=votes.length-1;j++){
+          if(prevVotes[i].points === votes[j].points){
+            arr.push(prevVotes[i])
+            prevVotes[i]=votes[j]
+          }
+        }
+      }
+      console.log(arr,prevVotes,'prev')
+      for(let i=0;i<=arr.length-1;i++){
+        for(let j=0;j<=pts.length-1;i++){
+          if(arr[i].dishId==pts[j].id){
+            pts[j].points -= arr[i].points
+          }
+        }
+      }
+      for(let i=0;i<=votes.length-1;i++){
+        for(let j=0;j<=pts.length-1;i++){
+          if(votes[i].dishId == pts[j].id){
+            pts[j].points += votes[i].points
+          }
+        }
+      }
+      // localStorage.setItem(userState.user.name,JSON.stringify(votes))
+    }
     userDispatch({ type: "UPDATE_VOTES", payload: formData })
-    localStorage.setItem("votes", JSON.stringify(votes))
+    localStorage.setItem(userState.user.name,JSON.stringify(votes))
     navigate("/result")
   }
 
