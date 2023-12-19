@@ -75,7 +75,7 @@ function DishList() {
     })
 
     localStorage.setItem("dishPoints", JSON.stringify(currPoints))
-    const newPoints = votes.reduce((sum, vote) => sum + vote.points, 0)
+    const newPoints = currPoints.reduce((sum, vote) => sum + vote.points, 0)
     userDispatch({ type: "UPDATE_USER_POINTS", payload: newPoints })
 
     const formData = {
@@ -83,7 +83,6 @@ function DishList() {
     }
 
     userDispatch({ type: "UPDATE_VOTES", payload: formData })
-    localStorage.setItem(userState.user.name, JSON.stringify(votes))
     navigate("/result")
   }
 
