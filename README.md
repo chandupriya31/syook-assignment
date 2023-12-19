@@ -5,7 +5,7 @@ Installation
 Provide installation steps using npm or yarn, if applicable.
 
 # Clone the repository
-git clone git@github.com:WinayCV/Dish-poll.git
+git clone https://github.com/chandupriya31/react-dishpoll.git
 
 # Navigate to the project directory
 cd react-dishpoll
