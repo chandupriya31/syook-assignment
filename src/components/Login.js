@@ -36,7 +36,7 @@ function Login() {
     const errors = runValidation()
     if(Object.entries(errors).length===0){
         const user = userData.find(ele => ele.username ===username && ele.password === password)
-        console.log('user',user)
+        // console.log('user',user)
         if(user) {
             const formData = {
               id : user.id,

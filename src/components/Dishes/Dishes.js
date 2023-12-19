@@ -8,17 +8,23 @@ import { UserContext } from "../../App";
 function DishList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const dishData = useSelector((state)=>{
-  //   return state?.dish?.dishes
-  // })
-  const { userDispatch,userState } = useContext(UserContext);
+  const { userDispatch, userState } = useContext(UserContext);
   const [votes, setVotes] = useState([]);
 
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      dispatch(startGetDishes());
+      dispatch(startGetDishes())
     }
   }, [dispatch])
+
+  const loggedInUserId = userState.user.id
+
+  useEffect(() => {
+    if (Array.isArray(userState?.myVotes)) {
+      const vote = userState.myVotes.map((ele) => ele?.dishId)
+      setVotes(vote)
+    }
+  }, [loggedInUserId, userState.myVotes])
 
   const handleVotes = (dishId, points) => {
     setVotes((prev) => {
@@ -49,53 +55,27 @@ function DishList() {
 
   const handleVoteSubmit = (e) => {
     e.preventDefault()
-
-    const currentDishPoints = JSON.parse(localStorage.getItem("dishPoints")) || []
+    const currPoints = JSON.parse(localStorage.getItem("dishPoints")) || []
     votes.forEach((vote) => {
-      const { dishId, points } = vote;
-      const index = currentDishPoints.findIndex(ele => ele.id === dishId);
+      const { dishId, points } = vote
+      const index = currPoints.findIndex((ele) => ele.id === dishId)
       if (index !== -1) {
-        currentDishPoints[index].points = (currentDishPoints[index].points || 0) + points;
+        currPoints[index].points = points
       } else {
-        currentDishPoints.push({ id: dishId, points: points });
+        currPoints.push({ id: dishId, points: points })
       }
     })
-    localStorage.setItem("dishPoints", JSON.stringify(currentDishPoints))
+
+    localStorage.setItem("dishPoints", JSON.stringify(currPoints))
+    const newPoints = votes.reduce((sum, vote) => sum + vote.points, 0)
+    userDispatch({ type: "UPDATE_USER_POINTS", payload: newPoints })
+
     const formData = {
       votes
     }
-    // const data = JSON.parse(localStorage.getItem('votes'))
-    if(!localStorage.getItem(userState.user.name)===null){
-      const prevVotes = JSON.parse(localStorage.getItem(userState.user.name))
-      const pts = JSON.parse(localStorage.getItem('dishPoints'))
-      let arr = []
-      for(let i=0;i<=prevVotes.length-1;i++){
-        for(let j = 0;j<=votes.length-1;j++){
-          if(prevVotes[i].points === votes[j].points){
-            arr.push(prevVotes[i])
-            prevVotes[i]=votes[j]
-          }
-        }
-      }
-      console.log(arr,prevVotes,'prev')
-      for(let i=0;i<=arr.length-1;i++){
-        for(let j=0;j<=pts.length-1;i++){
-          if(arr[i].dishId==pts[j].id){
-            pts[j].points -= arr[i].points
-          }
-        }
-      }
-      for(let i=0;i<=votes.length-1;i++){
-        for(let j=0;j<=pts.length-1;i++){
-          if(votes[i].dishId == pts[j].id){
-            pts[j].points += votes[i].points
-          }
-        }
-      }
-      // localStorage.setItem(userState.user.name,JSON.stringify(votes))
-    }
+
     userDispatch({ type: "UPDATE_VOTES", payload: formData })
-    localStorage.setItem(userState.user.name,JSON.stringify(votes))
+    localStorage.setItem(userState.user.name, JSON.stringify(votes))
     navigate("/result")
   }
 

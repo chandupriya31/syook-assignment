@@ -23,17 +23,16 @@ function DishRanking() {
 
   const [selectedDishId, setSelectedDishId] = useState(vote)
 
-  useEffect(() => {
-    if (Array.isArray(userState?.myVotes)) {
-      const vote = userState.myVotes.map(ele => ele?.dishId);
-      setSelectedDishId(vote)
-    }
-  }, [loggedInUserId, userState.myVotes])
+  // useEffect(() => {
+  //   if (Array.isArray(userState?.myVotes)) {
+  //     const vote = userState.myVotes.map(ele => ele?.dishId);
+  //     setSelectedDishId(vote)
+  //   }
+  // }, [loggedInUserId, userState.myVotes])
 
   const isSelected = (dishId) => {
     const data = JSON.parse(localStorage.getItem(userState?.user.name)) || []
     for(let i = 0;i<data.length;i++){
-      console.log(data[i],dishId)
       if(data[i].dishId === dishId){
         return true
       }

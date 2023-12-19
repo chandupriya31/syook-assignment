@@ -13,7 +13,7 @@ function App() {
 
   useEffect(()=>{
     JSON.parse(localStorage.getItem('user'))
-    JSON.parse(localStorage.getItem(userState?.user))
+    JSON.parse(localStorage.getItem(userState?.user.name))
   },[])
 
   const [userState,userDispatch] = useReducer(userReducer,{user:{},myVotes:[]})
