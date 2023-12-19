@@ -11,34 +11,29 @@ function DishRanking() {
   const getPointsForDish = (dishId) => {
     const vote = votes.find((ele) => ele.id === dishId);
     return vote ? vote.points : 0;
-  };
+  }
 
   const loggedInUserId = userState.user.id;
 
   const sortedDishes = [...dishes].sort(
     (a, b) => getPointsForDish(b.id) - getPointsForDish(a.id)
-  );
-  const vote = userState?.myVotes.map(ele =>{
-    return ele?.dishId
-  })
-  // console.log(user)
-  console.log('vote',vote)
-  const [selectedDishId, setSelectedDishId] = useState(vote);
-  console.log(selectedDishId,'sel')
+  )
+
+  const vote = Array.isArray(userState?.myVotes) ? userState.myVotes.map(ele => ele?.dishId) : []
+
+  const [selectedDishId, setSelectedDishId] = useState(vote)
+
   useEffect(() => {
-    setSelectedDishId(vote.map(ele => ele));
-  }, [loggedInUserId]);
+    setSelectedDishId(vote)
+  }, [loggedInUserId, vote])
 
   const handleSelectDish = (dishId) => {
     setSelectedDishId(dishId)
   }
 
   const isSelected = (dishId) => {
-    // vote.map(ele =>{
-    //   return ele === dishId
-    // })
-    return selectedDishId === dishId;
-  };
+    return selectedDishId.includes(dishId)
+  }
 
   return (
     <div>
